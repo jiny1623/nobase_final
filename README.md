@@ -24,7 +24,7 @@
 * ```cd root/FastMRI_challenge/e2evarnet_mraugment```로 진입합니다.
 * ```python reconstruct.py -n e2evarnet -p [PATH_DATA]``` 을 실행합니다.
 ### 2. Diffusion Models
-* TODO: Diffusion model reconstruction 과정
+* TODO: Diffusion model reconstruction 과정
 ### 3. Create new h5 files using model ckpt files
 * TODO: h5 file 만들어서 Data 폴더에 저장하는 과정
 ### 4. NAFNet
