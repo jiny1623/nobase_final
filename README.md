@@ -6,9 +6,9 @@
 다음을 순서대로 실행합니다.
 ### 1. E2E-Varnet (with MRAugment)
 * ```cd root/FastMRI_challenge/e2evarnet_mraugment```로 진입합니다.
-* ```python train.py --config_file experiments/paper_no_rotation_new.yaml -n e2evarnet```
+* ```python train.py --config_file experiments/paper_no_rotation.yaml -n e2evarnet```
   을 실행합니다.
-  * random seed는 430으로 고정되어 있습니다.
+  * random seed는 420으로 고정되어 있습니다.
   * TODO: epoch 어디까지 돌렸는지 기록
 * ```python reconstruct_and_save.py``` 을 실행합니다.
   * 각 데이터셋에 대한 reconstruction을 미리 구해 NAFNet의 training 및 evaluation 시간을 줄이기 위함입니다.
