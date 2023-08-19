@@ -25,7 +25,7 @@ def train_epoch(args, epoch, model, data_loader, optimizer, loss_type):
         grappa = grappa.cuda(non_blocking=True)
         varnet = varnet.cuda(non_blocking=True)
         diffusion = diffusion.cuda(non_blocking=True)
-        print("SF:", input.shape)
+#         print("SF:", input.shape)
         
         target = target.cuda(non_blocking=True)
         maximum = maximum.cuda(non_blocking=True)
@@ -130,7 +130,7 @@ def train(args):
 
     model = NAFNet(img_channel=img_channel, width=width, middle_blk_num=middle_blk_num,
                       enc_blk_nums=enc_blks, dec_blk_nums=dec_blks).cuda()
-    summary(model, (4, 384, 384), batch_size=1)
+#     summary(model, (4, 384, 384), batch_size=1)
     model.to(device=device)
     loss_type = SSIMLoss().to(device=device)
 #     optimizer = torch.optim.Adam(model.parameters(), args.lr)

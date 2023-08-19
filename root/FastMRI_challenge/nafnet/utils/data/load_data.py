@@ -11,7 +11,7 @@ class SliceData(Dataset):
         self.target_key = target_key
         self.forward = forward
         self.examples = []
-        self.recon_path = Path('../../../recon_data/')
+        self.recon_path = Path('../recon_data/')
         self.which_data = root.parent.name
 
         files = list(Path(root).iterdir())

@@ -15,15 +15,17 @@ def test(args, model, data_loader):
     inputs = defaultdict(dict)
     
     with torch.no_grad():
-        for (input, grappa, _, _, fnames, slices) in data_loader:
+        for (input, grappa, varnet, diffusion, _, _, fnames, slices) in data_loader:
             input = input.cuda(non_blocking=True)
-            grappa = grappa.cuda(non_blocking=True) 
-            print(grappa.shape)
-            print(input.shape)
-            stacked_input = torch.stack((input, grappa), dim=1)
-            print("INPUT:", stacked_input.shape)
+            grappa = grappa.cuda(non_blocking=True)
+            varnet = varnet.cuda(non_blocking=True)
+            diffusion = diffusion.cuda(non_blocking=True)
+#             print(grappa.shape)
+#             print(input.shape)
+            stacked_input = torch.stack((input, grappa, varnet, diffusion), dim=1)
+#             print("INPUT:", stacked_input.shape)
             output = model(stacked_input)
-            print("OUTPUT:", output.shape)
+#             print("OUTPUT:", output.shape)
 
             for i in range(output.shape[0]):
                 reconstructions[fnames[i]][int(slices[i])] = output[i].cpu().numpy()
@@ -53,7 +55,7 @@ def forward(args):
 #     middle_blk_num = 1
 #     dec_blks = [1, 1, 1, 1]
     
-    img_channel = 2
+    img_channel = 4
     width = 32
 
     enc_blks = [2, 2, 4, 8]
@@ -62,7 +64,7 @@ def forward(args):
     
     model = NAFNet(img_channel=img_channel, width=width, middle_blk_num=middle_blk_num,
                       enc_blk_nums=enc_blks, dec_blk_nums=dec_blks)
-#     summary(model, (2, 384, 384), batch_size=1)
+#     summary(model, (4, 384, 384), batch_size=1)
     
 #     model = Unet(in_chans = args.in_chans, out_chans = args.out_chans)
     model.to(device=device)
