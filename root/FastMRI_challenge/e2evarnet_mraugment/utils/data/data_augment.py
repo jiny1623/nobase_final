@@ -263,52 +263,24 @@ class DataAugmentor:
         return kspace, target
         
     def schedule_p(self):
-        D1 = self.hparams.aug_delay_1
-        D2 = self.hparams.aug_delay_2
+        D = self.hparams.aug_delay
         T = self.hparams.max_epochs
         t = self.current_epoch_fn()
-        p_max1 = self.hparams.aug_strength_1
-        p_max2 = self.hparams.aug_strength_2
+        p_max = self.hparams.aug_strength
 
-        if self.hparams.aug_schedule == 'constant':
-#             if t < D1: return 0.0
-            p = p_max1
-        elif self.hparams.aug_schedule == 'ramp':
-            if t < D1: return 0.0
-            p = (t-D1)/(T-D1) * p_max1
-        elif self.hparams.aug_schedule == 'exp':
-            if t < D1: return 0.0
-            c = self.hparams.aug_exp_decay/(T-D1) # Decay coefficient
-            p = p_max1/(1-exp(-(T-D1)*c))*(1-exp(-(t-D1)*c))
-        elif self.hparams.aug_schedule == 'exp_2':
-            if t < min(D1, D2): return 0.0
-            c1 = self.hparams.aug_exp_decay_1/(T-D1) # Decay coefficient
-            p1 = p_max1/(1-exp(-(T-D1)*c1))*(1-exp(-(t-D1)*c1))
-            c2 = self.hparams.aug_exp_decay_2/(T-D2) # Decay coefficient
-            p2 = p_max2/(1-exp(-(T-D2)*c2))*(1-exp(-(t-D2)*c2))
-            p = max(p1, p2)
-        return p
+        if t < D:
+            return 0.0
+        else:
+            if self.hparams.aug_schedule == 'constant':
+                p = p_max
+            elif self.hparams.aug_schedule == 'ramp':
+                p = (t-D)/(T-D) * p_max
+            elif self.hparams.aug_schedule == 'exp':
+                c = self.hparams.aug_exp_decay/(T-D) # Decay coefficient
+                p = p_max/(1-exp(-(T-D)*c))*(1-exp(-(t-D)*c))
+            return p
         
-#         if t < D1:
-#             return 0.0
-#         else:
-#             if self.hparams.aug_schedule == 'constant':
-#                 p = p_max1
-#             elif self.hparams.aug_schedule == 'ramp':
-#                 p = (t-D1)/(T-D1) * p_max1
-#             elif self.hparams.aug_schedule == 'exp':
-#                 c = self.hparams.aug_exp_decay/(T-D1) # Decay coefficient
-#                 p = p_max1/(1-exp(-(T-D1)*c))*(1-exp(-(t-D1)*c))
-#             elif self.hparams.aug_schedule == 'exp_noh':
-#                 c1 = self.hparams.aug_exp_decay_1/(T-D1) # Decay coefficient
-#                 p1 = p_max1/(1-exp(-(T-D1)*c1))*(1-exp(-(t-D1)*c1))
-#                 c2 = self.hparams.aug_exp_decay_2/(T-D2) # Decay coefficient
-#                 p2 = p_max2/(1-exp(-(T-D2)*c2))*(1-exp(-(t-D2)*c2))
-#                 p = max(p1, p2)
-#             return p
-
-        
-    def add_augmentation_specific_args(parser):
+def add_augmentation_specific_args(parser):
         parser.add_argument(
             '--aug_on', 
             default=False,
@@ -325,43 +297,24 @@ class DataAugmentor:
             help='Type of data augmentation strength scheduling. Options: constant, ramp, exp'
         )
         parser.add_argument(
-            '--aug_delay_1', 
+            '--aug_delay', 
             type=int, 
-            default=3,
+            default=0,
             help='Number of epochs at the beginning of training without data augmentation. The schedule in --aug_schedule will be adjusted so that at the last epoch the augmentation strength is --aug_strength.'
         )
         parser.add_argument(
-            '--aug_delay_2', 
-            type=int, 
-            default=15,
-            help='Number of epochs at the beginning of training without data augmentation. The schedule in --aug_schedule will be adjusted so that at the last epoch the augmentation strength is --aug_strength.'
-        )
-        parser.add_argument(
-            '--aug_strength_1', 
+            '--aug_strength', 
             type=float, 
-            default=0.55, 
+            default=0.0, 
             help='Augmentation strength, combined with --aug_schedule determines the augmentation strength in each epoch'
         )
         parser.add_argument(
-            '--aug_exp_decay_1', 
+            '--aug_exp_decay', 
             type=float, 
             default=5.0, 
             help='Exponential decay coefficient if --aug_schedule is set to exp. 1.0 is close to linear, 10.0 is close to step function'
         )
-        parser.add_argument(
-            '--aug_strength_2', 
-            type=float, 
-            default=1.0, 
-            help='Augmentation strength, combined with --aug_schedule determines the augmentation strength in each epoch'
-        )
-        parser.add_argument(
-            '--aug_exp_decay_2', 
-            type=float, 
-            default=5.0, 
-            help='Exponential decay coefficient if --aug_schedule is set to exp. 1.0 is close to linear, 10.0 is close to step function'
-        )
-        
-        
+
         # --------------------------------------------
         # Related to interpolation 
         # --------------------------------------------
@@ -475,7 +428,7 @@ class DataAugmentor:
             default=0.25, 
             help='Maximum scaling applied as fraction of image dimensions. If set to s, a scaling factor between 1.0-s and 1.0+s will be applied.'
         )
-
+        
         #---------------------------------------------------
         # Additional arguments not specific to augmentations 
         #---------------------------------------------------
