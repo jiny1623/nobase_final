@@ -10,6 +10,8 @@ from collections import defaultdict
 from utils.data.load_data import create_data_loaders
 from utils.common.utils import save_reconstructions
 from utils.model.varnet import VarNet
+from utils.data.data_augment import DataAugmentor
+from utils.data.transforms import DataTransform
         
 def validate(args, model, data_loader):
     model.eval()
@@ -49,9 +51,11 @@ def write_h5(args):
     checkpoint = torch.load(args.exp_dir / 'best_model.pt')
     print(checkpoint['epoch'], checkpoint['best_val_loss'].item())
     model.load_state_dict(checkpoint['model'])
+    
+    val_data_transform = DataTransform(False, args.max_key)
 
     print("reconstructing train set...")
-    train_loader = create_data_loaders(data_path = args.data_path_train, args = args, isforward=True)
+    train_loader = create_data_loaders(data_path = args.data_path_train, args = args, _transform = val_data_transform)
     train_reconstructions = validate(args, model, train_loader)
     
     print("writing train reconstructions into h5 file...")
@@ -60,7 +64,7 @@ def write_h5(args):
             wf.create_dataset('image_varnet', data=recons)
     
     print("reconstructing val set...")
-    val_loader = create_data_loaders(data_path = args.data_path_val, args = args, isforward=True)
+    val_loader = create_data_loaders(data_path = args.data_path_val, args = args, _transform = val_data_transform)
     val_reconstructions = validate(args, model, val_loader)
     
     print("writing val reconstructions into h5 file...")
@@ -69,8 +73,8 @@ def write_h5(args):
             wf.create_dataset('image_varnet', data=recons)
     
     print("reconstructing leaderboard set... (for evaluation only)")
-    acc4_loader = create_data_loaders(data_path = args.data_path_leaderboard_acc4, args = args, isforward=True)
-    acc8_loader = create_data_loaders(data_path = args.data_path_leaderboard_acc8, args = args, isforward=True)
+    acc4_loader = create_data_loaders(data_path = args.data_path_leaderboard_acc4, args = args, _transform = val_data_transform, isforward=True)
+    acc8_loader = create_data_loaders(data_path = args.data_path_leaderboard_acc8, args = args, _transform = val_data_transform, isforward=True)
     acc4_reconstructions = validate(args, model, acc4_loader)
     acc8_reconstructions = validate(args, model, acc8_loader)
     

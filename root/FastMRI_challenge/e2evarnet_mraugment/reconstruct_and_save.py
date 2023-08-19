@@ -12,7 +12,7 @@ if os.getcwd() + '/utils/common/' not in sys.path:
     sys.path.insert(1, os.getcwd() + '/utils/common/')
 from utils.common.utils import seed_fix
 
-from .create_h5 import write_h5
+from create_h5 import write_h5
 
 def parse():
     parser = argparse.ArgumentParser(description='Train Varnet on FastMRI challenge Images',
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     args.out_path_train = args.out_path / 'train'
     args.out_path_val = args.out_path / 'val'
     args.out_path_leaderboard_acc4 = args.out_path / 'acc4'
-    args.out_path_leaderboard_acc4 = args.out_path / 'acc8'
+    args.out_path_leaderboard_acc8 = args.out_path / 'acc8'
     
     args.out_path_train.mkdir(parents=True, exist_ok=True)
     args.out_path_val.mkdir(parents=True, exist_ok=True)
