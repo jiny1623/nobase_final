@@ -20,22 +20,19 @@ def train_epoch(args, epoch, model, data_loader, optimizer, loss_type):
     total_loss = 0.
 
     for iter, data in enumerate(data_loader):
-#         input, grappa, varnet, target, maximum, _, _ = data  #FIXME
-        input, grappa, target, maximum, _, _ = data
+        input, grappa, varnet, diffusion, target, maximum, _, _ = data
         input = input.cuda(non_blocking=True)
         grappa = grappa.cuda(non_blocking=True)
+        varnet = varnet.cuda(non_blocking=True)
+        diffusion = diffusion.cuda(non_blocking=True)
         print("SF:", input.shape)
-        
-        #######################################
-#         varnet = varnet.cuda(non_blocking=True) #FIXME
-        #######################################
         
         target = target.cuda(non_blocking=True)
         maximum = maximum.cuda(non_blocking=True)
         
 #         print("INPUT: ", input.shape)
 #         print("GRAPPA: ", grappa.shape)
-        input = torch.stack((input, grappa), dim=1)
+        input = torch.stack((input, grappa, varnet, diffusion), dim=1)
 #         print(input.shape)
         output = model(input)
 #         print("OUTPUT: ", output.shape)
@@ -66,17 +63,15 @@ def validate(args, model, data_loader):
 
     with torch.no_grad():
         for iter, data in enumerate(data_loader):
-#             input, grappa, varnet, target, _, fnames, slices = data  #FIXME
-            input, grappa, target, _, fnames, slices = data
+            input, grappa, varnet, diffusion, target, _, fnames, slices = data
             input = input.cuda(non_blocking=True)
             grappa = grappa.cuda(non_blocking=True)
+            varnet = varnet.cuda(non_blocking=True)
+            diffusion = diffusion.cuda(non_blocking=True)
 #             print("INPUT: ", input.shape)
 #             print("GRAPPA: ", grappa.shape)
 
-            #######################################
-    #         varnet = varnet.cuda(non_blocking=True) #FIXME
-            #######################################
-            stacked_input = torch.stack((input, grappa), dim=1)
+            stacked_input = torch.stack((input, grappa, varnet, diffusion), dim=1)
 #             print("STA: ", stacked_input.shape)
             output = model(stacked_input)
 
@@ -126,7 +121,7 @@ def train(args):
     
 #     model = Unet(in_chans = args.in_chans, out_chans = args.out_chans).cuda()
 
-    img_channel = 2
+    img_channel = 4
     width = 32
 
     enc_blks = [2, 2, 4, 8]
@@ -135,7 +130,7 @@ def train(args):
 
     model = NAFNet(img_channel=img_channel, width=width, middle_blk_num=middle_blk_num,
                       enc_blk_nums=enc_blks, dec_blk_nums=dec_blks).cuda()
-#     summary(model, (2, 384, 384), batch_size=1)
+    summary(model, (4, 384, 384), batch_size=1)
     model.to(device=device)
     loss_type = SSIMLoss().to(device=device)
 #     optimizer = torch.optim.Adam(model.parameters(), args.lr)

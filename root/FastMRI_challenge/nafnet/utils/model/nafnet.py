@@ -81,20 +81,19 @@ class NAFBlock(nn.Module):
 
 class NAFNet(nn.Module):
 
-    def __init__(self, img_channel=1, width=16, middle_blk_num=1, enc_blk_nums=[], dec_blk_nums=[]):
+    def __init__(self, img_channel=4, width=16, middle_blk_num=1, enc_blk_nums=[], dec_blk_nums=[]):
         super().__init__()
-
-        self.intro = nn.Conv2d(in_channels=img_channel, out_channels=width, kernel_size=3, padding=1, stride=1, groups=1,
+        self.intro = nn.Conv2d(in_channels=3, out_channels=width, kernel_size=3, padding=1, stride=1, groups=1,
                               bias=True)
-        self.ending = nn.Conv2d(in_channels=width, out_channels=img_channel, kernel_size=3, padding=1, stride=1, groups=1,
+        self.ending = nn.Conv2d(in_channels=width, out_channels=3, kernel_size=3, padding=1, stride=1, groups=1,
                               bias=True)
-
         self.encoders = nn.ModuleList()
         self.decoders = nn.ModuleList()
         self.middle_blks = nn.ModuleList()
         self.ups = nn.ModuleList()
         self.downs = nn.ModuleList()
-        self.final_conv = nn.Conv2d(in_channels=img_channel, out_channels=1, kernel_size=3, padding=1, stride=1, groups=1, bias=True)
+        self.final_conv = nn.Conv2d(in_channels=3, out_channels=1, kernel_size=3, padding=1, stride=1, groups=1, bias=True)
+#         self.final_conv = nn.Conv2d(in_channels=3, out_channels=1, kernel_size=1, stride=1, groups=1, bias=False)
 
         chan = width
         for num in enc_blk_nums:
@@ -149,6 +148,7 @@ class NAFNet(nn.Module):
         return x * std + mean
     
     def forward(self, inp):
+        inp = inp[:, :-1]
         inp, mean, std = self.norm_new(inp)
 #         print(inp.shape, mean.shape, std.shape)
 #         inp = inp.unsqueeze(1)
