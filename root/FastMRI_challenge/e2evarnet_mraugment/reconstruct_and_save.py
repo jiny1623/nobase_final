@@ -50,7 +50,7 @@ if __name__ == '__main__':
     args.data_path_train = args.data_path / 'train'
     args.data_path_val = args.data_path / 'val'
     args.data_path_leaderboard_acc4 = args.data_path / 'leaderboard' / 'acc4'
-    args.data_path_leaderboard_acc4 = args.data_path / 'leaderboard' / 'acc8'
+    args.data_path_leaderboard_acc8 = args.data_path / 'leaderboard' / 'acc8'
     
     args.out_path_train = args.out_path / 'train'
     args.out_path_val = args.out_path / 'val'

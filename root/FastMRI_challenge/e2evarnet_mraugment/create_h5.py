@@ -52,10 +52,10 @@ def write_h5(args):
     print(checkpoint['epoch'], checkpoint['best_val_loss'].item())
     model.load_state_dict(checkpoint['model'])
     
-    val_data_transform = DataTransform(False, args.max_key)
+    val_data_transform = DataTransform(True, args.max_key)
 
     print("reconstructing train set...")
-    train_loader = create_data_loaders(data_path = args.data_path_train, args = args, _transform = val_data_transform)
+    train_loader = create_data_loaders(data_path = args.data_path_train, args = args, _transform = val_data_transform, isforward=True)
     train_reconstructions = validate(args, model, train_loader)
     
     print("writing train reconstructions into h5 file...")
@@ -64,7 +64,7 @@ def write_h5(args):
             wf.create_dataset('image_varnet', data=recons)
     
     print("reconstructing val set...")
-    val_loader = create_data_loaders(data_path = args.data_path_val, args = args, _transform = val_data_transform)
+    val_loader = create_data_loaders(data_path = args.data_path_val, args = args, _transform = val_data_transform, isforward=True)
     val_reconstructions = validate(args, model, val_loader)
     
     print("writing val reconstructions into h5 file...")
