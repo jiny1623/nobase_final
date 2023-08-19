@@ -2,7 +2,6 @@ import torch
 import argparse
 import shutil
 import os, sys
-from utils.data.data_augment import DataAugmentor
 from pathlib import Path
 import pathlib
 import yaml
@@ -16,6 +15,7 @@ if os.getcwd() + '/utils/common/' not in sys.path:
     sys.path.insert(1, os.getcwd() + '/utils/common/')
 from utils.common.utils import seed_fix
 
+from utils.data.data_augment import DataAugmentor
 
 
 def parse():
