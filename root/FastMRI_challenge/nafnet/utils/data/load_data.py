@@ -11,6 +11,8 @@ class SliceData(Dataset):
         self.target_key = target_key
         self.forward = forward
         self.examples = []
+        self.recon_path = Path('../../../recon_data/')
+        self.which_data = root.parent.name
 
         files = list(Path(root).iterdir())
         for fname in sorted(files):
@@ -35,14 +37,17 @@ class SliceData(Dataset):
             input = hf[self.input_key][dataslice]
             grappa = hf['image_grappa'][dataslice]
             if self.forward:
-#                 varnet = -1 # FIXME
                 target = -1
             else:
-#                 varnet = hf['image_varnet'][dataslice] # FIXME
                 target = hf[self.target_key][dataslice]
             attrs = dict(hf.attrs)
-#         return self.transform(input, grappa, varnet, target, attrs, fname.name, dataslice) # FIXME
-        return self.transform(input, grappa, target, attrs, fname.name, dataslice)
+        
+        with h5py.File(self.recon_path / 'recon_varnet' / self.which_data / fname.name, "r") as hf:
+            varnet = hf['image_varnet'][dataslice]
+        with h5py.File(self.recon_path / 'recon_diffusion' / self.which_data / fname.name, "r") as hf:
+            diffusion = hf['image_diffusion'][dataslice]
+        
+        return self.transform(input, grappa, varnet, diffusion, target, attrs, fname.name, dataslice)
 
 def create_data_loaders(data_path, args, shuffle=False, isforward=False):
     if isforward == False:
