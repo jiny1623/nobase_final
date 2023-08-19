@@ -22,7 +22,7 @@ def parse():
     parser.add_argument('-e', '--num-epochs', type=int, default=1, help='Number of epochs')
     parser.add_argument('-l', '--lr', type=float, default=1e-3, help='Learning rate')
     parser.add_argument('-r', '--report-interval', type=int, default=500, help='Report interval')
-    parser.add_argument('-n', '--net-name', type=Path, default='test_varnet', help='Name of network')
+    parser.add_argument('-n', '--net-name', type=Path, default='e2evarnet', help='Name of network')
     parser.add_argument('-t', '--data-path', type=Path, default='/Data/', help='Directory of data')
     parser.add_argument('-o', '--out-path', type=Path, default='../recon_data/recon_varnet/')
     
@@ -44,6 +44,8 @@ if __name__ == '__main__':
     # fix seed
     if args.seed is not None:
         seed_fix(args.seed)
+    
+    args.exp_dir = '../result' / args.net_name / 'checkpoints'
     
     args.data_path_train = args.data_path / 'train'
     args.data_path_val = args.data_path / 'val'

@@ -46,8 +46,7 @@ def write_h5(args):
                    sens_chans=args.sens_chans)
     model.to(device=device)
     
-    model_path = Path('../result/augment_new/checkpoints')
-    checkpoint = torch.load(model_path / 'best_model.pt')
+    checkpoint = torch.load(args.exp_dir / 'best_model.pt')
     print(checkpoint['epoch'], checkpoint['best_val_loss'].item())
     model.load_state_dict(checkpoint['model'])
 
