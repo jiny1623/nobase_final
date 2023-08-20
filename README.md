@@ -22,7 +22,7 @@
 
 ### 3. NAFNet
 * ```cd root/FastMRI_challenge/nafnet```으로 진입합니다.
-* ```python train.py -n nafnet -e [EPOCH]``` 을 실행합니다.
+* ```python train.py -n nafnet -e 30``` 을 실행합니다.
   * random seed는 430으로 고정되어 있습니다.
  
 ## Reconstruction
