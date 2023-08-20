@@ -163,18 +163,16 @@ def train(args):
     val_loader = create_data_loaders(data_path = args.data_path_val, args = args, _transform = val_data_transform)
     
     val_loss_log = np.empty((0, 2))
-    print(f'Schedule: {augmentor.hparams.aug_schedule}')
-    print(f'T: {augmentor.hparams.max_epochs}')
-    print(f'D1: {augmentor.hparams.aug_delay_1}')
-    print(f'P_max1: {augmentor.hparams.aug_strength_1}')
-    print(f'D2: {augmentor.hparams.aug_delay_2}')
-    print(f'P_max2: {augmentor.hparams.aug_strength_2}')
+#     print(f'Schedule: {augmentor.hparams.aug_schedule}')
+#     print(f'T: {augmentor.hparams.max_epochs}')
+#     print(f'D: {augmentor.hparams.aug_delay}')
+#     print(f'P_max: {augmentor.hparams.aug_strength}')
 
     for epoch in range(start_epoch, args.num_epochs):
         print(f'Epoch #{epoch:2d} ............... {args.net_name} ...............')
         
         model.update_epoch(epoch)
-        print(f'Current p_schedule: {augmentor.schedule_p()}')
+#         print(f'Current p_schedule: {augmentor.schedule_p()}')
         train_loss, train_time = train_epoch(args, epoch, model, train_loader, optimizer, loss_type)
         val_loss, num_subjects, reconstructions, targets, inputs, val_time = validate(args, model, val_loader)
         

@@ -36,7 +36,7 @@ max_epochs: 100
 num_cascades: 12
 pools: 4
 resume_from_checkpoint: null
-seed: 420
+seed: 42
 sens_chans: 8
 sens_pools: 4
 train_resolution:

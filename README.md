@@ -8,8 +8,8 @@
 * ```cd root/FastMRI_challenge/e2evarnet_mraugment```로 진입합니다.
 * ```python train.py --config_file experiments/paper_no_rotation.yaml -n e2evarnet```
   을 실행합니다.
-  * random seed는 420으로 고정되어 있습니다.
-  * TODO: epoch 어디까지 돌렸는지 기록
+  * random seed는 42으로 고정되어 있습니다.
+  * 42 epoch의 model을 채택했습니다. (즉 42 epoch이 완료된 후 best_model.pt를 받았습니다.)
 * ```python reconstruct_and_save.py``` 을 실행합니다.
   * 각 데이터셋에 대한 reconstruction을 미리 구해 NAFNet의 training 및 evaluation 시간을 줄이기 위함입니다.
   
