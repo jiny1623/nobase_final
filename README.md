@@ -35,12 +35,8 @@
 * ```cd root/FastMRI_challenge```로 진입합니다.
 * ```python leaderboard_eval.py``` 을 실행합니다.
 
-## Reconstructed h5 Files
-모델의 구조 상 NAFNet을 훈련시키기 전에 E2E-Varnet
-
-
 ## 주어진 ckpt 파일을 통해서 reconstruct만 진행할 경우
-* 해당 leaderboard(including hidden) data가 vessl gpu의 /Data/ 안에 같은 형식으로 저장되어 있다고 간주하고 진행합니다.
+* 해당 leaderboard(including hidden) data가 vessl gpu의 ```/Data/leaderboard/acc4/```, ```/Data/leaderboard/acc8/``` 안에 저장되어 있다고 간주하고 진행합니다.
 * e2evarnet의 best_model.pt를 ```root/FastMRI_challenge/result/e2evarnet/checkpoints/```에 저장합니다.
 * baby_diffusion의 model20.pt를 ```root/FastMRI_challenge/result/baby_diffusion/checkpoints/```에 저장합니다.
 * nafnet의 best_model.pt를 ```root/FastMRI_challenge/result/nafnet/checkpoints/```에 저장합니다.
